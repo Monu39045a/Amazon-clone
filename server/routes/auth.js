@@ -3,9 +3,9 @@ const authRouter = express.Router();
 const User = require("../models/user");
 const bcrypt = require("bcryptjs");
 
-authRouter.get("/api/user", (req, res) => {
-  res.json({ message: "Hello" });
-});
+// authRouter.get("/api/user", (req, res) => {
+//   res.json({ message: "Hello" });
+// });
 
 authRouter.post("/api/signup", async (req, res) => {
   const { name, email, password } = req.body;
@@ -19,12 +19,10 @@ authRouter.post("/api/signup", async (req, res) => {
     }
 
     // Hash the password
-
     const hashPassword = await bcrypt.hash(password, 10);
 
     //post that data into database
     let user = new User({ name, email, password: hashPassword });
-
     user = await user.save();
 
     //return that data to the user
