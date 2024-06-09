@@ -9,6 +9,7 @@ const bcrypt = require("bcryptjs");
 
 authRouter.post("/api/signup", async (req, res) => {
   const { name, email, password } = req.body;
+  // console.log(name);
 
   try {
     const existingUser = await User.findOne({ email });

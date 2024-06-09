@@ -11,7 +11,7 @@ const PORT = 3000;
 const app = express();
 const DB =
   "mongodb+srv://abhishek39045:Monu39045a%40@cluster0.24izqie.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
-
+// const DB = "mongodb://localhost:27017/";
 // const DB = process.env.URI;
 
 // middleware

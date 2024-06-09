@@ -1,6 +1,7 @@
 import 'package:amazon_clone/common/widgets/custom_button.dart';
 import 'package:amazon_clone/common/widgets/custom_textfield.dart';
 import 'package:amazon_clone/constants/global_variable.dart';
+import 'package:amazon_clone/features/auth/services/auth_service.dart';
 import 'package:flutter/material.dart';
 
 // to keep track of radio button
@@ -8,6 +9,7 @@ enum Auth { signin, signup }
 
 class AuthScreen extends StatefulWidget {
   static const String routeName = '/auth-screen';
+
   const AuthScreen({super.key});
 
   @override
@@ -20,9 +22,30 @@ class _AuthScreenState extends State<AuthScreen> {
   final _signUpFormKey = GlobalKey<FormState>();
   final _signInFormKey = GlobalKey<FormState>();
 
+  final AuthService authService = AuthService();
+
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
+
+  void signUpUser() {
+    authService.signUpUser(
+        context: context,
+        email: _emailController.text,
+        password: _passwordController.text,
+        name: _nameController.text,
+        onSuccess: () {
+          _emailController.clear();
+          _nameController.clear();
+          _passwordController.clear();
+        });
+  }
+
+  // void clear() {
+  //   _emailController.clear();
+  //   _nameController.clear();
+  //   _passwordController.clear();
+  // }
 
   @override
   void dispose() {
@@ -94,7 +117,14 @@ class _AuthScreenState extends State<AuthScreen> {
                       const SizedBox(
                         height: 10,
                       ),
-                      CustomButton(text: "Sign Up", onTap: () {})
+                      CustomButton(
+                          text: "Sign Up",
+                          onTap: () {
+                            if (_signUpFormKey.currentState!.validate()) {
+                              signUpUser();
+                              // clear();
+                            }
+                          })
                     ],
                   ),
                 ),
