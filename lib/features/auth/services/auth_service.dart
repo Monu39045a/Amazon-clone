@@ -95,4 +95,48 @@ class AuthService {
       }
     }
   }
+
+  // get User Data [sharedpreference token verification ]
+  void getUserData(
+    BuildContext context,
+  ) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('x-auth-token');
+
+      if (token == null) {
+        prefs.setString('x-auth-token', '');
+      }
+
+      // http.Response res = await http.post(Uri.parse('$uri/tokenIsValid'){
+
+      // });
+      //   //here in body we have to pass json we have already created user which is type json only
+      //   http.Response res = await http.post(
+      //     Uri.parse('$uri/api/signin'),
+      //     body: jsonEncode({'email': email, 'password': password}),
+      //     headers: <String, String>{
+      //       'Content-Type': 'application/json; charset=UTF-8'
+      //     },
+      //   );
+
+      // httpErrorHandle(
+      //   response: res,
+      //   context: context,
+      //   onSuccess: () async {
+      //     SharedPreferences prefs = await SharedPreferences.getInstance();
+      //     Provider.of<UserProvider>(context, listen: false).setUser(res.body);
+      //     // jsonDecode because we have res.body as a JSON and we are storing it as a String and then we are extracting token
+      //     await prefs.setString('x-auth-token', jsonDecode(res.body)['token']);
+      //     Navigator.pushNamedAndRemoveUntil(
+      //         context, HomeScreen.routeName, (route) => false);
+      //     // onSuccess();
+      //   },
+      // );
+    } catch (e) {
+      if (context.mounted) {
+        showSnackBar(context, 'An error occurred: ${e.toString()}');
+      }
+    }
+  }
 }

@@ -54,8 +54,33 @@ authRouter.post("/api/signin", async (req, res) => {
         .json({ message: "Invalid Username/Email or Password" });
     }
 
-    const token = jwt.sign({ id: user._id }, "passwordKey");
+    const token = jwt.sign({ id: user._id }, "passwordKey"); // passwordkey is secretKey
     res.status(200).json({ token, ...user._doc });
+  } catch (e) {
+    return res.status(500).json({ error: e.message });
+  }
+});
+
+//check jwt token valid or not
+authRouter.post("/tokenIsValid", async (req, res) => {
+  try {
+    const token = req.header("x-auth-token");
+    if (!token) {
+      //we just need to verify is token is there or not
+      return res.json(false);
+    }
+
+    const isVerified = jwt.verify(token, "passwordKey");
+    if (!isVerified) {
+      return res.json(false);
+    }
+
+    // we can also user findbyId because we have stored it in token
+    const user = await User.findById(isVerified.id); //or token.id both will work
+    if (!user) {
+      return res.json(false);
+    }
+    res.json(true);
   } catch (e) {
     return res.status(500).json({ error: e.message });
   }
