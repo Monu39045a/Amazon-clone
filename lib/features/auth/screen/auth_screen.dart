@@ -41,6 +41,17 @@ class _AuthScreenState extends State<AuthScreen> {
         });
   }
 
+  void signInUser() {
+    authService.signInUser(
+        context: context,
+        email: _emailController.text,
+        password: _passwordController.text,
+        onSuccess: () {
+          _emailController.clear();
+          _passwordController.clear();
+        });
+  }
+
   // void clear() {
   //   _emailController.clear();
   //   _nameController.clear();
@@ -170,7 +181,14 @@ class _AuthScreenState extends State<AuthScreen> {
                       const SizedBox(
                         height: 10,
                       ),
-                      CustomButton(text: "Sign In", onTap: () {})
+                      CustomButton(
+                          text: "Sign In",
+                          onTap: () {
+                            if (_signInFormKey.currentState!.validate()) {
+                              signInUser();
+                              // clear();
+                            }
+                          })
                     ],
                   ),
                 ),
