@@ -1,8 +1,9 @@
 import 'dart:convert';
 
+import 'package:amazon_clone/common/widgets/bottom_bar.dart';
 import 'package:amazon_clone/constants/error_handling.dart';
 import 'package:amazon_clone/constants/utils.dart';
-import 'package:amazon_clone/home/screens/home_screen.dart';
+// import 'package:amazon_clone/home/screens/home_screen.dart';
 import 'package:amazon_clone/models/user.dart';
 import 'package:amazon_clone/constants/global_variable.dart';
 import 'package:amazon_clone/providers/user_provider.dart';
@@ -85,7 +86,7 @@ class AuthService {
           // jsonDecode because we have res.body as a JSON and we are storing it as a String and then we are extracting token
           await prefs.setString('x-auth-token', jsonDecode(res.body)['token']);
           Navigator.pushNamedAndRemoveUntil(
-              context, HomeScreen.routeName, (route) => false);
+              context, BottomBar.routeName, (route) => false);
           // onSuccess();
         },
       );
@@ -108,31 +109,28 @@ class AuthService {
         prefs.setString('x-auth-token', '');
       }
 
-      // http.Response res = await http.post(Uri.parse('$uri/tokenIsValid'){
+      http.Response res = await http.post(
+        Uri.parse('$uri/tokenIsValid'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'x-auth-token': token!
+        },
+      );
 
-      // });
-      //   //here in body we have to pass json we have already created user which is type json only
-      //   http.Response res = await http.post(
-      //     Uri.parse('$uri/api/signin'),
-      //     body: jsonEncode({'email': email, 'password': password}),
-      //     headers: <String, String>{
-      //       'Content-Type': 'application/json; charset=UTF-8'
-      //     },
-      //   );
+      var response = jsonDecode(res.body);
+      if (response) {
+        //get user data
+        http.Response userRes = await http.get(
+          Uri.parse("$uri/"),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+            'x-auth-token': token
+          },
+        );
 
-      // httpErrorHandle(
-      //   response: res,
-      //   context: context,
-      //   onSuccess: () async {
-      //     SharedPreferences prefs = await SharedPreferences.getInstance();
-      //     Provider.of<UserProvider>(context, listen: false).setUser(res.body);
-      //     // jsonDecode because we have res.body as a JSON and we are storing it as a String and then we are extracting token
-      //     await prefs.setString('x-auth-token', jsonDecode(res.body)['token']);
-      //     Navigator.pushNamedAndRemoveUntil(
-      //         context, HomeScreen.routeName, (route) => false);
-      //     // onSuccess();
-      //   },
-      // );
+        var userProvider = Provider.of<UserProvider>(context, listen: false);
+        userProvider.setUser(userRes.body);
+      }
     } catch (e) {
       if (context.mounted) {
         showSnackBar(context, 'An error occurred: ${e.toString()}');

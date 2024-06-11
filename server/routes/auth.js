@@ -3,6 +3,7 @@ const authRouter = express.Router();
 const User = require("../models/user");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const auth = require("../middleware/auth");
 
 // authRouter.get("/api/user", (req, res) => {
 //   res.json({ message: "Hello" });
@@ -69,7 +70,6 @@ authRouter.post("/tokenIsValid", async (req, res) => {
       //we just need to verify is token is there or not
       return res.json(false);
     }
-
     const isVerified = jwt.verify(token, "passwordKey");
     if (!isVerified) {
       return res.json(false);
@@ -84,6 +84,13 @@ authRouter.post("/tokenIsValid", async (req, res) => {
   } catch (e) {
     return res.status(500).json({ error: e.message });
   }
+});
+
+// get user data
+// auth middleware to make sure you are authorized
+authRouter.get("/", auth, async (req, res) => {
+  const user = await User.findById(req.user);
+  res.json({ ...user._doc, token: req.token });
 });
 
 module.exports = authRouter;
