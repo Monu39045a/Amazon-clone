@@ -3,6 +3,7 @@ import 'package:amazon_clone/common/widgets/custom_textfield.dart';
 import 'package:amazon_clone/constants/global_variable.dart';
 import 'package:amazon_clone/features/auth/services/auth_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 // to keep track of radio button
 enum Auth { signin, signup }
@@ -52,12 +53,6 @@ class _AuthScreenState extends State<AuthScreen> {
         });
   }
 
-  // void clear() {
-  //   _emailController.clear();
-  //   _nameController.clear();
-  //   _passwordController.clear();
-  // }
-
   @override
   void dispose() {
     super.dispose();
@@ -80,23 +75,25 @@ class _AuthScreenState extends State<AuthScreen> {
               "Welcome",
               style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
             ),
-            ListTile(
-              tileColor: _auth == Auth.signup
-                  ? GlobalVariables.backgroundColor
-                  : GlobalVariables.greyBackgroundColor,
-              title: const Text(
-                "Create Account",
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              leading: Radio(
-                activeColor: GlobalVariables.secondaryColor,
-                groupValue: _auth,
-                value: Auth.signup,
-                onChanged: (Auth? val) {
-                  setState(() {
-                    _auth = val!; // It can never be null
-                  });
-                },
+            SingleChildScrollView(
+              child: ListTile(
+                tileColor: _auth == Auth.signup
+                    ? GlobalVariables.backgroundColor
+                    : GlobalVariables.greyBackgroundColor,
+                title: const Text(
+                  "Create Account",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                leading: Radio(
+                  activeColor: GlobalVariables.secondaryColor,
+                  groupValue: _auth,
+                  value: Auth.signup,
+                  onChanged: (Auth? val) {
+                    setState(() {
+                      _auth = val!; // It can never be null
+                    });
+                  },
+                ),
               ),
             ),
             if (_auth == Auth.signup)
