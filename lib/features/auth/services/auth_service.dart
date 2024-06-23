@@ -83,11 +83,14 @@ class AuthService {
         onSuccess: () async {
           SharedPreferences prefs = await SharedPreferences.getInstance();
           Provider.of<UserProvider>(context, listen: false).setUser(res.body);
+
           // jsonDecode because we have res.body as a JSON and we are storing it as a String and then we are extracting token
           await prefs.setString('x-auth-token', jsonDecode(res.body)['token']);
           Navigator.pushNamedAndRemoveUntil(
-              context, BottomBar.routeName, (route) => false);
-          // onSuccess();
+            context,
+            BottomBar.routeName,
+            (route) => false,
+          );
         },
       );
     } catch (e) {
@@ -127,9 +130,10 @@ class AuthService {
             'x-auth-token': token
           },
         );
-
-        var userProvider = Provider.of<UserProvider>(context, listen: false);
-        userProvider.setUser(userRes.body);
+        if (context.mounted) {
+          var userProvider = Provider.of<UserProvider>(context, listen: false);
+          userProvider.setUser(userRes.body);
+        }
       }
     } catch (e) {
       if (context.mounted) {

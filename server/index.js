@@ -3,8 +3,10 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
+
 //Import from other files
 const authRouter = require("./routes/auth");
+const adminRouter = require("./routes/admin");
 
 // INIT
 const PORT = 3000;
@@ -18,6 +20,7 @@ const DB =
 // app.use(express.json());
 app.use(bodyParser.json());
 app.use(authRouter);
+app.use(adminRouter);
 
 //Connection
 mongoose
