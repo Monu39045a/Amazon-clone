@@ -39,6 +39,7 @@ class AdminServices {
         imageUrls.add(res.secureUrl); //Download url or upload url
       }
 
+      // print(category);
       //Product Model
       Product product = Product(
         name: name,
@@ -68,7 +69,9 @@ class AdminServices {
             }
           });
     } catch (e) {
-      showSnackBar(context, 'An error occurred: ${e.toString()}');
+      if (context.mounted) {
+        showSnackBar(context, 'An error occurred: ${e.toString()}');
+      }
     }
   }
 }

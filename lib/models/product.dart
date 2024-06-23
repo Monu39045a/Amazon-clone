@@ -27,7 +27,7 @@ class Product {
       'description': description,
       'quantity': quantity,
       'price': price,
-      'categoty': category,
+      'category': category,
       'images': images,
       'id': id,
     };

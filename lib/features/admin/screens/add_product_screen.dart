@@ -50,6 +50,7 @@ class _AddProductState extends State<AddProduct> {
   ];
 
   void sellProduct() {
+    print(category);
     if (_addProductFormKey.currentState!.validate() && images.isNotEmpty) {
       adminServices.sellProduct(
         context: context,
@@ -216,6 +217,7 @@ class _AddProductState extends State<AddProduct> {
                           }).toList(),
                           onChanged: (String? newVal) {
                             setState(() {
+                              print(newVal);
                               category = newVal!;
                             });
                           },
@@ -227,7 +229,7 @@ class _AddProductState extends State<AddProduct> {
                 const SizedBox(
                   height: 20,
                 ),
-                CustomButton(text: 'Sell', onTap: sellProduct)
+                CustomButton(text: 'Sell ', onTap: sellProduct)
               ],
             ),
           ),
