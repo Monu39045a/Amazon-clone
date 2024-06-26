@@ -112,6 +112,7 @@ class AuthService {
         prefs.setString('x-auth-token', '');
       }
 
+      print(token);
       http.Response res = await http.post(
         Uri.parse('$uri/tokenIsValid'),
         headers: <String, String>{

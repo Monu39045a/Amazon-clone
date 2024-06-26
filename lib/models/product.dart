@@ -3,7 +3,7 @@ import 'dart:convert';
 class Product {
   final String name;
   final String description;
-  final int quantity;
+  final double quantity;
   final double price;
   final String category;
   final List<String> images;
@@ -37,8 +37,8 @@ class Product {
     return Product(
       name: map['name'] ?? '',
       description: map['description'] ?? '',
-      quantity: map['quantity']?.toInt() ?? 0,
-      price: map['price'] ?? 0.0,
+      quantity: map['quantity']?.toDouble() ?? 0.0,
+      price: map['price']?.toDouble() ?? 0.0,
       category: map['category'] ?? '',
       images: List<String>.from(map['images'] ?? []),
       id: map['_id'] ?? '',
@@ -47,6 +47,7 @@ class Product {
 
   String toJson() => json.encode(toMap());
 
+  //creates a product model
   factory Product.fromJson(String source) =>
       Product.fromMap(json.decode(source));
 }

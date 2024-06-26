@@ -50,13 +50,13 @@ class _AddProductState extends State<AddProduct> {
   ];
 
   void sellProduct() {
-    print(category);
+    // print(category);
     if (_addProductFormKey.currentState!.validate() && images.isNotEmpty) {
       adminServices.sellProduct(
         context: context,
         name: productNameController.text,
         description: descriptionController.text,
-        quantity: int.parse(quantityController.text),
+        quantity: double.parse(quantityController.text),
         price: double.parse(priceController.text),
         category: category,
         images: images,
@@ -217,7 +217,7 @@ class _AddProductState extends State<AddProduct> {
                           }).toList(),
                           onChanged: (String? newVal) {
                             setState(() {
-                              print(newVal);
+                              // print(newVal);
                               category = newVal!;
                             });
                           },
