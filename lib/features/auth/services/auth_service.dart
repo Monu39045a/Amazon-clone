@@ -77,22 +77,30 @@ class AuthService {
       );
 
       // print(res.body);
-      httpErrorHandle(
-        response: res,
-        context: context,
-        onSuccess: () async {
-          SharedPreferences prefs = await SharedPreferences.getInstance();
-          Provider.of<UserProvider>(context, listen: false).setUser(res.body);
+      if (context.mounted) {
+        httpErrorHandle(
+          response: res,
+          context: context,
+          onSuccess: () async {
+            SharedPreferences prefs = await SharedPreferences.getInstance();
+            if (context.mounted) {
+              Provider.of<UserProvider>(context, listen: false)
+                  .setUser(res.body);
+            }
 
-          // jsonDecode because we have res.body as a JSON and we are storing it as a String and then we are extracting token
-          await prefs.setString('x-auth-token', jsonDecode(res.body)['token']);
-          Navigator.pushNamedAndRemoveUntil(
-            context,
-            BottomBar.routeName,
-            (route) => false,
-          );
-        },
-      );
+            // jsonDecode because we have res.body as a JSON and we are storing it as a String and then we are extracting token
+            await prefs.setString(
+                'x-auth-token', jsonDecode(res.body)['token']);
+            if (context.mounted) {
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                BottomBar.routeName,
+                (route) => false,
+              );
+            }
+          },
+        );
+      }
     } catch (e) {
       if (context.mounted) {
         showSnackBar(context, 'An error occurred: ${e.toString()}');

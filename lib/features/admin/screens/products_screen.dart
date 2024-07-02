@@ -32,6 +32,17 @@ class _ProductScreenState extends State<ProductScreen> {
     setState(() {});
   }
 
+  // void deleteProductWithoutConfirmation(Product product, int index) {
+  //   adminServices.deletedProduct(
+  //     context: context,
+  //     product: product,
+  //     onSucess: () {
+  //       products!.removeAt(index);
+  //       setState(() {});
+  //     },
+  //   );
+  // }
+
   // Delete Product with confirmation
   void deleteProduct(Product product, int index) {
     showDialog(
@@ -77,15 +88,15 @@ class _ProductScreenState extends State<ProductScreen> {
                   fontSize: 18,
                 ),
               ),
-              onPressed: () {
+              onPressed: () async {
+                setState(() {
+                  products!.removeAt(index);
+                });
                 Navigator.of(context).pop(); // Close the dialog box
                 adminServices.deletedProduct(
                   context: context,
                   product: product,
-                  onSucess: () {
-                    products!.removeAt(index);
-                    setState(() {});
-                  },
+                  onSucess: () {},
                 );
               },
             ),

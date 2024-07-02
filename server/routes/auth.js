@@ -90,6 +90,7 @@ authRouter.post("/tokenIsValid", async (req, res) => {
 // auth middleware to make sure you are authorized
 authRouter.get("/", auth, async (req, res) => {
   const user = await User.findById(req.user);
+  console.log(user);
   res.json({ ...user._doc, token: req.token });
 });
 

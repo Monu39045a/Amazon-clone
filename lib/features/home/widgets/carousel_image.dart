@@ -24,6 +24,17 @@ class CarouselImage extends StatelessWidget {
                   i,
                   fit: BoxFit.cover,
                   height: 250,
+                  loadingBuilder: (context, child, loadingProgress) {
+                    if (loadingProgress == null) return child;
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  },
+                  errorBuilder: (context, error, stackTrace) {
+                    return const Center(
+                      child: Text("Loading error"),
+                    );
+                  },
                 );
               },
             ),

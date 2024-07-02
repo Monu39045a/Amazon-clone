@@ -1,8 +1,9 @@
 import 'package:amazon_clone/constants/global_variable.dart';
-import 'package:amazon_clone/home/widgets/address_box.dart';
-import 'package:amazon_clone/home/widgets/carousel_image.dart';
-import 'package:amazon_clone/home/widgets/deal_of_the_day.dart';
-import 'package:amazon_clone/home/widgets/top_categories.dart';
+import 'package:amazon_clone/features/home/widgets/address_box.dart';
+import 'package:amazon_clone/features/home/widgets/carousel_image.dart';
+import 'package:amazon_clone/features/home/widgets/deal_of_the_day.dart';
+import 'package:amazon_clone/features/home/widgets/top_categories.dart';
+import 'package:amazon_clone/features/search/screens/search_screen.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -14,6 +15,20 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  // String searchQuery = '';
+  // void navigateToSearchScreen(String searchQuery) async {
+  //   setState(() {
+  //     searchQuery = '';
+  //   });
+  //   Navigator.pushNamed(context, SearchScreen.routeName,
+  //       arguments: searchQuery);
+  // }
+
+  void navigateToSearchScreen(String searchQuery) {
+    Navigator.pushNamed(context, SearchScreen.routeName,
+        arguments: searchQuery);
+  }
+
   @override
   Widget build(BuildContext context) {
     // final user = Provider.of<UserProvider>(context).user;
@@ -35,7 +50,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Material(
                     borderRadius: BorderRadius.circular(7),
                     elevation: 1,
-                    child: TextField(
+                    child: TextFormField(
+                      // initialValue: searchQuery,
+                      onFieldSubmitted: navigateToSearchScreen,
                       decoration: InputDecoration(
                         prefixIcon: InkWell(
                           // beacuse we need a splash effect

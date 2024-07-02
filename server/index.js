@@ -7,6 +7,7 @@ const bodyParser = require("body-parser");
 //Import from other files
 const authRouter = require("./routes/auth");
 const adminRouter = require("./routes/admin");
+const productRouter = require("./routes/product");
 
 // INIT
 const PORT = 3000;
@@ -21,6 +22,7 @@ const DB =
 app.use(bodyParser.json());
 app.use(authRouter);
 app.use(adminRouter);
+app.use(productRouter);
 
 //Connection
 mongoose

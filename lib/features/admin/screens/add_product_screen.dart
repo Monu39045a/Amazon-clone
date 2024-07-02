@@ -61,11 +61,11 @@ class _AddProductState extends State<AddProduct> {
         category: category,
         images: images,
       );
+      // setState(() {});
     }
   }
 
   void selectImages() async {
-    // todo: implement image selection
     var res = await imagePicker();
     setState(() {
       images = res;
