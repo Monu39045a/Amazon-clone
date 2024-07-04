@@ -30,6 +30,7 @@ class AuthService {
         address: '',
         token: '',
         type: '',
+        cart: [],
       );
 
       //here in body we have to pass json we have already created user which is type json only
@@ -41,17 +42,19 @@ class AuthService {
         },
       );
 
-      httpErrorHandle(
-        response: res,
-        context: context,
-        onSuccess: () {
-          showSnackBar(
-            context,
-            'Account Created! Login with the same credentials',
-          );
-          onSuccess();
-        },
-      );
+      if (context.mounted) {
+        httpErrorHandle(
+          response: res,
+          context: context,
+          onSuccess: () {
+            showSnackBar(
+              context,
+              'Account Created! Login with the same credentials',
+            );
+            onSuccess();
+          },
+        );
+      }
     } catch (e) {
       if (context.mounted) {
         showSnackBar(context, 'An error occurred: ${e.toString()}');
@@ -120,7 +123,7 @@ class AuthService {
         prefs.setString('x-auth-token', '');
       }
 
-      print(token);
+      // print(token);
       http.Response res = await http.post(
         Uri.parse('$uri/tokenIsValid'),
         headers: <String, String>{
