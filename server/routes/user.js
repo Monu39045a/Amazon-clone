@@ -55,4 +55,41 @@ userRouter.post("/api/add-product-to-cart", auth, async (req, res) => {
   }
 });
 
+userRouter.delete("/api/remove-product", auth, async (req, res) => {
+  try {
+    const { productId } = req.body;
+    console.log(productId);
+    let user = await User.findById(req.user);
+
+    // let index = -1;
+    // for (let i = 0; i < user.cart.length; ++i) {
+    //   if (user.cart[i].product._id.equals(productId)) {
+    //     console.log(user.cart);
+    //     user.cart[i].quantity -= 1;
+    //     index = i;
+    //     break;
+    //   }
+    // }
+
+    // const cartProductIndex = user.cart.findIndex((item) =>
+    //   item.product._id.equals(productId)
+    // );
+    // or
+    const cartProductIndex = user.cart.findIndex((item) => {
+      return item.product._id.equals(productId);
+    });
+    console.log(cartProductIndex);
+    user.cart[cartProductIndex].quantity -= 1;
+
+    if (user.cart[cartProductIndex].quantity == 0) {
+      user.cart.splice(cartProductIndex, 1);
+    }
+
+    user = await user.save();
+    res.json(user);
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
 module.exports = userRouter;
