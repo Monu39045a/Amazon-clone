@@ -18,7 +18,7 @@ class ProductDetailsService {
     try {
       final userProvider = Provider.of<UserProvider>(context, listen: false);
       // print("hello 1");
-      print(product.id);
+      // print(product.id);
       http.Response response = await http.post(
         Uri.parse('$uri/api/add-product-to-cart'),
         headers: {
@@ -39,7 +39,7 @@ class ProductDetailsService {
               cart: jsonDecode(response.body)['cart'],
             );
             userProvider.setUserFromModel(user);
-            showSnackBar(context, "Item Added to Card Sucessfully!!");
+            showSnackBar(context, "Item Added to Cart Sucessfully!!");
           },
         );
       }

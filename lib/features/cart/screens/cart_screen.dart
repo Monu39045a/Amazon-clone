@@ -1,20 +1,22 @@
+import 'package:amazon_clone/common/widgets/custom_button.dart';
 import 'package:amazon_clone/constants/global_variable.dart';
+import 'package:amazon_clone/features/address/screens/address_screen.dart';
+import 'package:amazon_clone/features/cart/widgets/cart_product.dart';
+import 'package:amazon_clone/features/cart/widgets/cart_subtotal.dart';
 import 'package:amazon_clone/features/home/widgets/address_box.dart';
-import 'package:amazon_clone/features/home/widgets/carousel_image.dart';
-import 'package:amazon_clone/features/home/widgets/deal_of_the_day.dart';
-import 'package:amazon_clone/features/home/widgets/top_categories.dart';
 import 'package:amazon_clone/features/search/screens/search_screen.dart';
+import 'package:amazon_clone/providers/user_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-class HomeScreen extends StatefulWidget {
-  static const String routeName = '/home';
-  const HomeScreen({super.key});
+class CartScreen extends StatefulWidget {
+  const CartScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<CartScreen> createState() => _CartScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _CartScreenState extends State<CartScreen> {
   final TextEditingController _searchController = TextEditingController();
 
   @override
@@ -24,13 +26,30 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void navigateToSearchScreen(String searchQuery) {
-    Navigator.pushNamed(context, SearchScreen.routeName,
-        arguments: searchQuery);
+    Navigator.pushNamed(
+      context,
+      SearchScreen.routeName,
+      arguments: searchQuery,
+    );
   }
+
+  void navigateToAddress(double sum) {
+    Navigator.pushNamed(
+      context,
+      AddressScreen.routeName,
+      arguments: sum.toString(),
+    );
+  }
+
+  // void buyProduct() {}
 
   @override
   Widget build(BuildContext context) {
-    // final user = Provider.of<UserProvider>(context).user;
+    final user = context.watch<UserProvider>().user;
+    double sum = user.cart.fold<double>(0, (previousValue, element) {
+      return previousValue +
+          ((element['quantity'] * element['product']['price']));
+    });
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(60),
@@ -50,8 +69,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     borderRadius: BorderRadius.circular(7),
                     elevation: 1,
                     child: TextFormField(
-                      // initialValue: searchQuery,
                       controller: _searchController,
+                      // initialValue: searchQuery,
                       onFieldSubmitted: navigateToSearchScreen,
                       decoration: InputDecoration(
                         prefixIcon: InkWell(
@@ -112,19 +131,37 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ),
-      body: const SingleChildScrollView(
+      body: SingleChildScrollView(
         child: Column(
           children: [
-            AddressBox(),
-            SizedBox(
-              height: 12,
+            const AddressBox(),
+            const SizedBox(
+              height: 5,
             ),
-            TopCategories(),
-            SizedBox(
-              height: 12,
+            const CartSubtotal(),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: CustomButton(
+                text: 'Proceed to Buy (${user.cart.length} items) ',
+                onTap: () => navigateToAddress(sum),
+                textColor: Colors.black38,
+                color: Colors.yellow[600],
+              ),
             ),
-            CarouselImage(),
-            DealOfTheDay(),
+            const SizedBox(
+              height: 15,
+            ),
+            Container(
+              color: Colors.black12.withOpacity(0.1), //a black line divider
+              height: 1,
+            ),
+            ListView.builder(
+              itemCount: user.cart.length,
+              shrinkWrap: true,
+              itemBuilder: (context, index) {
+                return CartProduct(index: index);
+              },
+            ),
           ],
         ),
       ),
