@@ -4,9 +4,12 @@ import 'dart:io';
 import 'package:amazon_clone/constants/error_handling.dart';
 import 'package:amazon_clone/constants/global_variable.dart';
 import 'package:amazon_clone/constants/utils.dart';
+import 'package:amazon_clone/models/order.dart';
 import 'package:amazon_clone/models/product.dart';
 import 'package:amazon_clone/providers/user_provider.dart';
 import 'package:cloudinary_public/cloudinary_public.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
@@ -188,6 +191,80 @@ class AdminServices {
     } catch (e) {
       if (context.mounted) {
         showSnackBar(context, "Error Deleting product: ${e.toString()}");
+      }
+    }
+  }
+
+  Future<List<Order>> fetchAllOrders(BuildContext context) async {
+    List<Order> allOrders = [];
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    try {
+      http.Response res = await http.get(
+        Uri.parse('$uri/admin/get-orders'),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'x-auth-token': userProvider.user.token,
+        },
+      );
+
+      if (context.mounted) {
+        httpErrorHandle(
+          response: res,
+          context: context,
+          onSuccess: () {
+            if (context.mounted) {
+              final decodedData = jsonDecode(res.body);
+
+              for (var orderData in decodedData) {
+                allOrders.add(
+                  Order.fromJson(
+                    jsonEncode(orderData),
+                  ),
+                );
+              }
+            }
+          },
+        );
+      }
+    } catch (e) {
+      if (context.mounted) {
+        showSnackBar(context, "Error fetching orders: ${e.toString()}");
+      }
+    }
+    return allOrders;
+  }
+
+  void changeOrderStatus({
+    required BuildContext context,
+    required int status,
+    required Order order,
+    required VoidCallback onSucess,
+  }) async {
+    try {
+      final userProvider = Provider.of<UserProvider>(context, listen: false);
+      http.Response res = await http.post(
+        Uri.parse('$uri/admin/change-order-status'),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'x-auth-token': userProvider.user.token,
+        },
+        body: jsonEncode(
+          {
+            'id': order.id,
+            'status': status,
+          },
+        ),
+      );
+      if (context.mounted) {
+        httpErrorHandle(
+          response: res,
+          context: context,
+          onSuccess: onSucess,
+        );
+      }
+    } catch (e) {
+      if (context.mounted) {
+        showSnackBar(context, "Error fetching orders: ${e.toString()}");
       }
     }
   }
